@@ -2,6 +2,7 @@ import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
 import useRockets from "../../hooks/useRockets";
+import Button from "../ui/Button";
 import RocketCard from "./RocketCard";
 
 type Filter = "ALL" | "ACTIVE" | "REUSABLE";
@@ -97,13 +98,12 @@ export default function RocketExplorer() {
           <p className="text-xl font-semibold tracking-[-.03em]">
             UNABLE TO LOAD ROCKETS
           </p>
-          <button
-            type="button"
+          <Button
             onClick={() => void refetch()}
             className="mt-6 border border-white px-5 py-3 text-[10px] font-bold tracking-[.16em] hover:bg-white hover:text-black"
           >
             TRY AGAIN
-          </button>
+          </Button>
         </div>
       )}
       {!loading && !error && rockets.length === 0 && (
@@ -120,9 +120,9 @@ export default function RocketExplorer() {
           </div>
           {hasNextPage && (
             <div className="pt-10 text-center">
-              <button type="button" onClick={() => void fetchNextPage()} disabled={isFetchingNextPage} className="border border-white px-6 py-3 text-[10px] font-bold tracking-[.16em] transition hover:bg-white hover:text-black disabled:cursor-wait disabled:opacity-50">
+              <Button onClick={() => void fetchNextPage()} disabled={isFetchingNextPage} className="px-6 py-3 text-[10px] font-bold tracking-[.16em]">
                 {isFetchingNextPage ? "LOADING ROCKETS..." : "LOAD MORE"}
-              </button>
+              </Button>
             </div>
           )}
         </>

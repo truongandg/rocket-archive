@@ -1,6 +1,7 @@
 import { ArrowLeft, Heart } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import RocketLaunchHistory from "../components/rocket/RocketLaunchHistory";
+import Button from "../components/ui/Button";
 import useRocket from "../hooks/useRocket";
 import useRocketLaunches from "../hooks/useRocketLaunches";
 import { useLibraryStore } from "../store/favorites";
@@ -45,7 +46,7 @@ export default function RocketDetailPage() {
           <Link to="/" className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[.16em] text-white/60 hover:text-white"><ArrowLeft size={15} /> BACK TO EXPLORER</Link>
           <div className="mt-16 flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <div><p className="text-[10px] font-semibold tracking-[.26em] text-white/50">{rocket.manufacturer?.name?.toUpperCase() || "LAUNCH VEHICLE"}</p><h1 className="mt-3 max-w-4xl text-5xl font-semibold tracking-[-.05em] md:text-7xl">{rocket.full_name || rocket.name}</h1><p className="mt-5 text-sm font-medium tracking-[.12em] text-white/60">{rocket.families[0]?.name?.toUpperCase() || "ROCKET CONFIGURATION"}{rocket.variant ? ` · ${rocket.variant.toUpperCase()}` : ""} · {rocket.active ? "ACTIVE" : "INACTIVE"} · {rocket.reusable ? "REUSABLE" : "EXPENDABLE"}</p></div>
-            <button type="button" onClick={() => toggleFavouriteRocket(rocket.id)} className="inline-flex h-12 items-center justify-center gap-3 border border-white px-5 text-[10px] font-bold tracking-[.16em] hover:bg-white hover:text-black"><Heart size={16} fill={favourite ? "currentColor" : "none"} />{favourite ? "FAVOURITED" : "ADD TO FAVOURITES"}</button>
+            <Button onClick={() => toggleFavouriteRocket(rocket.id)} className="h-12 gap-3 px-5 text-[10px] font-bold tracking-[.16em]"><Heart size={16} fill={favourite ? "currentColor" : "none"} />{favourite ? "FAVOURITED" : "ADD TO FAVOURITES"}</Button>
           </div>
         </div>
       </section>

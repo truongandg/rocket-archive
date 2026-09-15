@@ -1,5 +1,7 @@
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import Button from "../ui/Button";
+import StatusBadge from "../ui/StatusBadge";
 import { useLibraryStore } from "../../store/favorites";
 import type { Rocket } from "../../types/rocket";
 
@@ -25,9 +27,9 @@ export default function RocketCard({ rocket }: RocketCardProps) {
         <div className="relative h-44 overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_50%_0%,#3f3f3f,transparent_65%)]">
           {rocket.image?.image_url ? <img src={rocket.image.image_url} alt="" className="h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100" /> : <div className="absolute inset-x-0 bottom-6 px-6 text-[10px] font-semibold tracking-[.24em] text-white/40">LAUNCHER CONFIGURATION</div>}
           <div className="absolute inset-0 bg-gradient-to-t from-[#090909] to-transparent" />
-          <div className="absolute bottom-4 left-5 flex gap-2 text-[9px] font-bold tracking-[.14em]">
-            <span className={`border px-2 py-1 ${rocket.active ? "border-[#a8ffbd]/60 bg-black/35 text-[#a8ffbd]" : "border-white/25 bg-black/35 text-white/60"}`}>{rocket.active ? "ACTIVE" : "INACTIVE"}</span>
-            <span className={`border px-2 py-1 ${rocket.reusable ? "border-[#b9dcff]/60 bg-black/35 text-[#b9dcff]" : "border-white/25 bg-black/35 text-white/60"}`}>{rocket.reusable ? "REUSABLE" : "EXPENDABLE"}</span>
+          <div className="absolute bottom-4 left-5 flex gap-2">
+            <StatusBadge tone={rocket.active ? "success" : "neutral"}>{rocket.active ? "ACTIVE" : "INACTIVE"}</StatusBadge>
+            <StatusBadge tone={rocket.reusable ? "info" : "neutral"}>{rocket.reusable ? "REUSABLE" : "EXPENDABLE"}</StatusBadge>
           </div>
         </div>
         <div className="px-5 pb-5 pt-5">
@@ -41,9 +43,9 @@ export default function RocketCard({ rocket }: RocketCardProps) {
           </div>
         </div>
       </Link>
-      <button type="button" onClick={() => toggleFavouriteRocket(rocket.id)} aria-label={favourite ? `Remove ${rocket.name} from favourites` : `Add ${rocket.name} to favourites`} className="absolute right-4 top-4 grid h-9 w-9 place-items-center border border-white/30 bg-black/40 text-white transition hover:bg-white hover:text-black">
+      <Button onClick={() => toggleFavouriteRocket(rocket.id)} aria-label={favourite ? `Remove ${rocket.name} from favourites` : `Add ${rocket.name} to favourites`} className="absolute right-4 top-4 h-9 w-9 border-white/30 bg-black/40 p-0">
         <Heart size={16} fill={favourite ? "currentColor" : "none"} />
-      </button>
+      </Button>
     </article>
   );
 }
