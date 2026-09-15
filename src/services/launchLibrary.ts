@@ -31,8 +31,14 @@ export async function getRocket(id: number): Promise<Rocket> {
 
 /** Fetches launches tied to a launcher configuration for the rocket detail page. */
 export async function getRocketLaunches(id: number): Promise<Launch[]> {
+  const params = new URLSearchParams({
+    rocket__configuration__id: String(id),
+    limit: String(LAUNCH_HISTORY_PAGE_SIZE),
+    ordering: "-net",
+    net__lte: new Date().toISOString(),
+  });
   const page = await fetchApi<PaginatedResponse<Launch>>(
-    `/launches/?rocket__configuration__id=${id}&limit=${LAUNCH_HISTORY_PAGE_SIZE}&ordering=-net`,
+    `/launches/?${params.toString()}`,
   );
   return page.results;
 }

@@ -13,6 +13,7 @@ export interface Launch {
     name: string;
     description: string | null;
     type: string | null;
+    vid_urls?: Array<{ url: string }> | null;
   } | null;
   image: { image_url: string | null } | null;
 }

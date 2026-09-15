@@ -1,4 +1,5 @@
 import type { Launch } from "../../types/launch";
+import { ExternalLink } from "lucide-react";
 
 interface RocketLaunchHistoryProps {
   launches: Launch[];
@@ -19,11 +20,12 @@ export default function RocketLaunchHistory({ launches }: RocketLaunchHistoryPro
   return (
     <div className="border-t border-white/15">
       {launches.map((launch) => (
-        <article key={launch.id} className="grid gap-3 border-b border-white/10 py-5 md:grid-cols-[1.5fr_.7fr_.9fr_1fr] md:items-center">
+        <article key={launch.id} className="grid gap-3 border-b border-white/10 py-5 md:grid-cols-[1.5fr_.7fr_.8fr_1fr_auto] md:items-center">
           <div><h3 className="text-sm font-semibold">{launch.name}</h3><p className="mt-1 text-[10px] font-semibold tracking-[.13em] text-white/40">{launch.mission?.type || "MISSION"}</p></div>
           <p className="text-xs text-white/60">{formatDate(launch.net)}</p>
           <p className="text-xs text-white/60">{launch.status?.name || "STATUS TBD"}</p>
           <p className="text-xs leading-relaxed text-white/45">{launch.pad?.name || launch.launch_service_provider?.name || "LOCATION TBD"}</p>
+          {launch.mission?.vid_urls?.[0]?.url ? <a href={launch.mission.vid_urls[0].url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] font-bold tracking-[.14em] text-white/60 hover:text-white">WATCH <ExternalLink size={13} /></a> : <span />}
         </article>
       ))}
     </div>

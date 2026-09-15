@@ -30,6 +30,7 @@ export default function RocketDetailPage() {
 
   if (!Number.isInteger(rocketId) || rocketId < 1)
     return <Navigate to="/" replace />;
+
   if (rocketQuery.isLoading)
     return (
       <div className="mx-auto max-w-[1600px] px-8 py-24 lg:px-12">
@@ -38,6 +39,7 @@ export default function RocketDetailPage() {
         </p>
       </div>
     );
+
   if (rocketQuery.isError || !rocketQuery.data)
     return (
       <div className="mx-auto max-w-[1600px] px-8 py-24 lg:px-12">
