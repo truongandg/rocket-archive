@@ -40,14 +40,6 @@ Open the local address printed by Vite, usually `http://localhost:5173`.
 
 The `.env` file sets `VITE_API_BASE_URL` to the development API. Change this value to use another API endpoint, then restart the dev server. For production builds, set the variable before running `npm run build`. Local `.env` files are ignored by Git; `.env.sample` documents the required configuration.
 
-Other commands:
-
-```bash
-npm run build
-npm run lint
-npm run preview
-```
-
 ## CI/CD
 
 GitHub Actions runs lint and build checks on pull requests and pushes to `main`. Successful checks on `main` trigger a Vercel deployment.
@@ -70,11 +62,11 @@ Check deployment status in Vercel. Its automatic Git deployments may also run if
 
 ## Architecture
 
-The app is a client-rendered React application built with Vite and TypeScript. React provides reusable components for rocket cards, collections, and dialogs; Vite keeps local development and production builds straightforward. React Router gives each page its own URL without requiring a server-rendering framework.
+The app uses React, TypeScript, and Vite for a simple setup with reusable components. React Router handles navigation between pages.
 
-TanStack React Query manages API caching, loading/error states, and pagination. Zustand handles favourites and collections with `localStorage` persistence, while temporary UI state such as search text and open dialogs stays inside components. Tailwind CSS supports consistent responsive styling, and Lucide supplies reusable icons.
+React Query handles API data, caching, loading states, and pagination. Zustand saves favourites and collections to `localStorage`. Search text and dialog state stay in their components. Tailwind CSS handles styling, and Lucide provides icons.
 
-Pages compose feature components, hooks manage remote data, and services handle API requests. This separates presentation from data access and keeps shared behaviour reusable.
+The code is split into pages, components, hooks, and API services to keep UI and data handling separate.
 
 ```text
 src/
@@ -105,17 +97,22 @@ This state persists under the `rocket-archive-storage` localStorage key. Remote 
 
 ## API usage
 
-The app uses the development API to avoid rate limits during development and testing. We can switch to the production API by setting `VITE_API_BASE_URL` in `.env` to `https://ll.thespacedevs.com/2.3.0/`. The production API currently limits unauthenticated requests to 15 calls per hour; higher limits require an API key. See the [official API documentation](https://lldev.thespacedevs.com/) for rate-limit details.
+The app uses the [Launch Library 2 development API](https://lldev.thespacedevs.com/2.3.0/), which has no rate limits for development and testing.
 
-The explorer uses `/launcher_configurations/` with server-side search, filter, and ordering parameters. It requests 10 records at a time and follows the API's `next` pagination URL on demand.
+- `/launcher_configurations/` — search, filter, and sort rockets, with 10 results per page.
+- `/launcher_configurations/:id/` — get a rocket's details.
+- `/launches/` — get a rocket's 20 most recent completed launches.
 
-Rocket detail pages request `/launcher_configurations/:id/`. Related launch history uses `/launches/` filtered by launcher configuration, limited to the 20 most recent completed launches.
+To use production, set `VITE_API_BASE_URL` in `.env` to `https://ll.thespacedevs.com/2.3.0/`. Production has rate limits; see the [API documentation](https://lldev.thespacedevs.com/).
 
-The development API can have incomplete or delayed information. The UI treats optional fields as nullable and uses fallbacks rather than inventing values.
+## Known limitations
+
+- Favourites and collections are saved in the current browser only and do not sync across devices. Clearing site data removes them.
+- The development API can return incomplete or outdated data. Missing or failed rocket images display a fallback icon.
 
 ## Tradeoffs and future improvements
 
-For the two-hour scope, the implementation prioritizes the core search, favourite, and collection flows. Browser storage avoids the need for a backend or authentication, but saved data is limited to the current browser and does not sync across devices. A client-rendered app keeps deployment simple, while accepting that rocket content loads after JavaScript runs. Automated tests and more advanced features remain follow-up work.
+For the two-hour scope, I focused on search, favourites, and collections. Data is saved in the browser to keep setup simple, so there is no login or syncing across devices. The app loads content in the browser and is easy to deploy. With more time, I would add automated tests and improve the features listed below.
 
 - Launch history is limited to 20 completed launches; it could use its own Load More control.
 - Video links appear only when the API supplies a `mission.vid_urls` entry.
