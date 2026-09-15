@@ -48,6 +48,18 @@ npm run lint
 npm run preview
 ```
 
+## CI/CD
+
+GitHub Actions runs lint and build checks on pull requests and pushes to `main`. Successful checks on `main` trigger a Vercel deployment.
+
+Setup:
+
+1. Connect the GitHub repository to Vercel.
+2. Create a Vercel deploy hook for `main` and save its URL as the GitHub Actions secret `VERCEL_DEPLOY_HOOK_URL`.
+3. Set `VITE_API_BASE_URL` in Vercel using the value in `.env.sample`.
+
+Check deployment status in Vercel. Its automatic Git deployments may also run if enabled.
+
 ## Routes
 
 | Route          | Purpose                                                       |
