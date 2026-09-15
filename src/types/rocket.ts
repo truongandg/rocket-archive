@@ -12,6 +12,7 @@ export interface Rocket {
   id: number;
   name: string;
   full_name: string | null;
+  variant: string | null;
   description: string | null;
   manufacturer: RocketManufacturer | null;
   families: Array<{ id: number; name: string }>;
@@ -25,8 +26,11 @@ export interface Rocket {
   successful_launches: number | null;
   failed_launches: number | null;
   pending_launches: number | null;
+  consecutive_successful_launches: number | null;
+  attempted_landings: number | null;
   successful_landings: number | null;
   failed_landings: number | null;
+  consecutive_successful_landings: number | null;
   image: RocketImage | null;
 }
 

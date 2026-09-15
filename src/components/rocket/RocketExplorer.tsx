@@ -13,7 +13,17 @@ export default function RocketExplorer() {
   const [filter, setFilter] = useState<Filter>("ALL");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<Sort>("launches");
-  const debouncedSearch = useDebouncedValue(search.trim());
+  const debouncedSearch = useDebouncedValue(search.trim(), 500);
+
+  const queryOptions = useMemo(
+    () => ({
+      search: debouncedSearch || undefined,
+      active: filter === "ACTIVE" ? true : undefined,
+      reusable: filter === "REUSABLE" ? true : undefined,
+      ordering: sort === "name" ? "name" as const : "-total_launch_count" as const,
+    }),
+    [debouncedSearch, filter, sort],
+  );
 
   const {
     data,
@@ -23,12 +33,7 @@ export default function RocketExplorer() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useRockets({
-    search: debouncedSearch || undefined,
-    active: filter === "ACTIVE" ? true : undefined,
-    reusable: filter === "REUSABLE" ? true : undefined,
-    ordering: sort === "name" ? "name" : "-total_launch_count",
-  });
+  } = useRockets(queryOptions);
   const rockets = useMemo(
     () => data?.pages.flatMap((page) => page.rockets) || [],
     [data],

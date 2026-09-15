@@ -4,7 +4,7 @@ import type { Rocket, RocketListOptions, RocketPage } from "../types/rocket";
 import { fetchApi } from "./fetcher";
 
 const ROCKET_LIST_LIMIT = 10;
-const LAUNCH_HISTORY_PAGE_SIZE = 100;
+const LAUNCH_HISTORY_PAGE_SIZE = 20;
 
 /** Fetches one filtered, ordered page of launcher configurations. */
 export async function getRockets(
@@ -31,14 +31,8 @@ export async function getRocket(id: number): Promise<Rocket> {
 
 /** Fetches launches tied to a launcher configuration for the rocket detail page. */
 export async function getRocketLaunches(id: number): Promise<Launch[]> {
-  const launches: Launch[] = [];
-  let next: string | null = `/launches/?rocket__configuration__id=${id}&limit=${LAUNCH_HISTORY_PAGE_SIZE}`;
-
-  while (next) {
-    const page: PaginatedResponse<Launch> = await fetchApi(next);
-    launches.push(...page.results);
-    next = page.next;
-  }
-
-  return launches;
+  const page = await fetchApi<PaginatedResponse<Launch>>(
+    `/launches/?rocket__configuration__id=${id}&limit=${LAUNCH_HISTORY_PAGE_SIZE}&ordering=-net`,
+  );
+  return page.results;
 }
