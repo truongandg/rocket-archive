@@ -1,6 +1,6 @@
 # Rocket Archive
 
-[Live demo](https://rocket-atlas-ten.vercel.app/)
+Live demo: [https://rocket-archive.vercel.app](https://rocket-archive.vercel.app/)
 
 Rocket Archive is a premium, aerospace-inspired explorer for launch vehicle configurations. Browse rockets, compare their flight records, inspect a configuration's detailed history, and save personal favourites and collections.
 
