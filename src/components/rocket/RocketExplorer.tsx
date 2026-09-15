@@ -1,5 +1,5 @@
-import { Search, SlidersHorizontal } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { useMemo, useState } from "react";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
 import useRockets from "../../hooks/useRockets";
 import RocketCard from "./RocketCard";
@@ -12,25 +12,32 @@ const filters: Filter[] = ["ALL", "ACTIVE", "REUSABLE"];
 export default function RocketExplorer() {
   const [filter, setFilter] = useState<Filter>("ALL");
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<Sort>("name");
+  const [sort, setSort] = useState<Sort>("launches");
   const debouncedSearch = useDebouncedValue(search.trim());
 
   const {
-    data: rockets = [],
+    data,
     isLoading: loading,
     isError: error,
     refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useRockets({
     search: debouncedSearch || undefined,
     active: filter === "ACTIVE" ? true : undefined,
     reusable: filter === "REUSABLE" ? true : undefined,
     ordering: sort === "name" ? "name" : "-total_launch_count",
   });
+  const rockets = useMemo(
+    () => data?.pages.flatMap((page) => page.rockets) || [],
+    [data],
+  );
 
   return (
     <section className="mx-auto max-w-[1600px] px-8 py-12 lg:px-12 lg:py-12">
-      <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
-        <label className="flex h-12 max-w-xl flex-1 items-center gap-3 border border-white/25 px-4 text-white/60 focus-within:border-white">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <label className="flex h-12 min-w-0 flex-1 items-center gap-3 border border-white/25 px-4 text-white/60 focus-within:border-white">
           <Search size={17} />
           <input
             value={search}
@@ -39,17 +46,18 @@ export default function RocketExplorer() {
             className="w-full bg-transparent text-xs font-medium tracking-[.14em] outline-none placeholder:text-white/35"
           />
         </label>
-        <label className="flex h-12 items-center gap-3 border border-white/25 px-4 text-[11px] font-semibold tracking-[.14em]">
+        <label className="relative flex h-12 shrink-0 items-center gap-3 border border-white/25 px-4 text-[11px] font-semibold tracking-[.14em] md:w-64">
           <SlidersHorizontal size={15} />
           <span className="text-white/45">ORDER</span>
           <select
             value={sort}
             onChange={(event) => setSort(event.target.value as Sort)}
-            className="bg-black outline-none"
+            className="w-full appearance-none bg-transparent pr-5 text-white outline-none"
           >
             <option value="name">NAME</option>
             <option value="launches">MOST LAUNCHES</option>
           </select>
+          <ChevronDown size={15} className="pointer-events-none absolute right-4 text-white/60" />
         </label>
       </div>
       <div className="mt-8 flex gap-6 overflow-x-auto border-b border-white/15">
@@ -99,11 +107,20 @@ export default function RocketExplorer() {
         </div>
       )}
       {!loading && !error && rockets.length > 0 && (
-        <div className="grid grid-cols-1 gap-5 pt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {rockets.map((rocket) => (
-            <RocketCard key={rocket.id} rocket={rocket} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-5 pt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {rockets.map((rocket) => (
+              <RocketCard key={rocket.id} rocket={rocket} />
+            ))}
+          </div>
+          {hasNextPage && (
+            <div className="pt-10 text-center">
+              <button type="button" onClick={() => void fetchNextPage()} disabled={isFetchingNextPage} className="border border-white px-6 py-3 text-[10px] font-bold tracking-[.16em] transition hover:bg-white hover:text-black disabled:cursor-wait disabled:opacity-50">
+                {isFetchingNextPage ? "LOADING ROCKETS..." : "LOAD MORE"}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

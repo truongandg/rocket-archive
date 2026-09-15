@@ -1,10 +1,9 @@
-/** A normalized Launch Library 2 launch, used for a rocket's history. */
-export interface RocketLaunch {
+export interface Launch {
   id: string;
   name: string;
   status: { id: number; name: string } | null;
   net: string | null;
-  launchServiceProvider: { id: number; name: string } | null;
+  launch_service_provider: { id: number; name: string } | null;
   pad: {
     id: number;
     name: string;
@@ -15,5 +14,5 @@ export interface RocketLaunch {
     description: string | null;
     type: string | null;
   } | null;
-  image: string | null;
+  image: { image_url: string | null } | null;
 }

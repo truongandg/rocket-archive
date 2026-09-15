@@ -1,3 +1,7 @@
+export interface RocketImage {
+  image_url: string | null;
+}
+
 export interface RocketManufacturer {
   id: number;
   name: string;
@@ -7,23 +11,23 @@ export interface RocketManufacturer {
 export interface Rocket {
   id: number;
   name: string;
-  fullName: string;
+  full_name: string | null;
   description: string | null;
   manufacturer: RocketManufacturer | null;
-  family: string | null;
+  families: Array<{ id: number; name: string }>;
   active: boolean | null;
   reusable: boolean | null;
-  maidenFlight: string | null;
-  launchMass: number | null;
-  leoCapacity: number | null;
-  gtoCapacity: number | null;
-  totalLaunchCount: number;
-  successfulLaunches: number;
-  failedLaunches: number;
-  pendingLaunches: number;
-  successfulLandings: number;
-  failedLandings: number;
-  imageUrl: string | null;
+  maiden_flight: string | null;
+  launch_mass: number | null;
+  leo_capacity: number | null;
+  gto_capacity: number | null;
+  total_launch_count: number | null;
+  successful_launches: number | null;
+  failed_launches: number | null;
+  pending_launches: number | null;
+  successful_landings: number | null;
+  failed_landings: number | null;
+  image: RocketImage | null;
 }
 
 export interface RocketListOptions {
@@ -31,4 +35,9 @@ export interface RocketListOptions {
   active?: boolean;
   reusable?: boolean;
   ordering?: "name" | "-total_launch_count";
+}
+
+export interface RocketPage {
+  rockets: Rocket[];
+  next: string | null;
 }
