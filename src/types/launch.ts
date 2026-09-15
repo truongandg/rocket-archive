@@ -1,22 +1,19 @@
-export interface Launch {
+/** A normalized Launch Library 2 launch, used for a rocket's history. */
+export interface RocketLaunch {
   id: string;
   name: string;
-  date_utc: string;
-  success: boolean | null;
-  upcoming: boolean;
-  flight_number: number;
-  details: string | null;
-  rocket: string;
-  launchpad: string;
-  links: {
-    patch: { small: string | null; large: string | null };
-    flickr: { small: string[]; original: string[] };
-    webcast: string | null;
-  };
-}
-
-export interface LaunchCollection {
-  id: string;
-  name: string;
-  launchIds: string[];
+  status: { id: number; name: string } | null;
+  net: string | null;
+  launchServiceProvider: { id: number; name: string } | null;
+  pad: {
+    id: number;
+    name: string;
+    location: { name: string } | null;
+  } | null;
+  mission: {
+    name: string;
+    description: string | null;
+    type: string | null;
+  } | null;
+  image: string | null;
 }
