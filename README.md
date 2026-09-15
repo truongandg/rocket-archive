@@ -1,5 +1,7 @@
 # Rocket Archive
 
+[Live demo](https://rocket-atlas-ten.vercel.app/)
+
 Rocket Archive is a premium, aerospace-inspired explorer for launch vehicle configurations. Browse rockets, compare their flight records, inspect a configuration's detailed history, and save personal favourites and collections.
 
 ## Features
@@ -26,6 +28,8 @@ Rocket Archive is a premium, aerospace-inspired explorer for launch vehicle conf
 
 ## Running locally
 
+Prerequisites: Node.js **24** (the version used to verify the build) and npm.
+
 ```bash
 npm install
 cp .env.sample .env
@@ -46,11 +50,11 @@ npm run preview
 
 ## Routes
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Rocket explorer with search, filters, sorting, and pagination |
-| `/rockets/:id` | Rocket configuration detail and related launch history |
-| `/collections` | Favourites and custom rocket collections |
+| Route          | Purpose                                                       |
+| -------------- | ------------------------------------------------------------- |
+| `/`            | Rocket explorer with search, filters, sorting, and pagination |
+| `/rockets/:id` | Rocket configuration detail and related launch history        |
+| `/collections` | Favourites and custom rocket collections                      |
 
 ## Architecture
 
