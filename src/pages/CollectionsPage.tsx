@@ -1,3 +1,4 @@
+import RocketLoader from "../components/ui/RocketLoader";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import CollectionCard from "../components/collection/CollectionCard";
@@ -60,16 +61,7 @@ export default function CollectionsPage() {
             {favouriteRocketIds.length} SAVED
           </span>
         </div>
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-5 pt-7 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 3 }, (_, index) => (
-              <div
-                key={index}
-                className="h-72 animate-pulse border border-white/10 bg-white/5"
-              />
-            ))}
-          </div>
-        )}
+        {isLoading && <RocketLoader label="Loading saved rockets..." />}
         {isError && (
           <p className="border-t border-white/15 py-10 text-xs font-semibold tracking-[.14em] text-white/40">
             UNABLE TO LOAD FAVOURITE ROCKETS

@@ -1,3 +1,4 @@
+import RocketLoader from "../components/ui/RocketLoader";
 import { ArrowLeft, Heart } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import CollectionPicker from "../components/collection/CollectionPicker";
@@ -34,9 +35,7 @@ export default function RocketDetailPage() {
   if (rocketQuery.isLoading)
     return (
       <div className="mx-auto max-w-[1600px] px-8 py-24 lg:px-12">
-        <p className="text-xs font-semibold tracking-[.22em] text-white/45">
-          LOADING ROCKET...
-        </p>
+        <RocketLoader label="Loading rocket..." />
       </div>
     );
 
@@ -121,7 +120,7 @@ export default function RocketDetailPage() {
           </div>
         </div>
       </section>
-      <main className="mx-auto max-w-[1600px] px-8 py-16 lg:px-12 lg:py-24">
+      <div className="mx-auto max-w-[1600px] px-8 py-16 lg:px-12 lg:py-24">
         <div className="grid gap-14 lg:grid-cols-[1.15fr_.85fr]">
           <div>
             <p className="text-[10px] font-semibold tracking-[.25em] text-white/45">
@@ -218,13 +217,15 @@ export default function RocketDetailPage() {
                 LAUNCH HISTORY
               </h2>
             </div>
-            {launchesQuery.isFetching && (
+            {launchesQuery.isFetching && !launchesQuery.isLoading && (
               <p className="text-[10px] font-semibold tracking-[.14em] text-white/40">
                 LOADING HISTORY...
               </p>
             )}
           </div>
-          {launchesQuery.isError ? (
+          {launchesQuery.isLoading ? (
+            <RocketLoader label="Loading launch history..." />
+          ) : launchesQuery.isError ? (
             <p className="border-t border-white/15 py-10 text-xs font-semibold tracking-[.15em] text-white/40">
               UNABLE TO LOAD LAUNCH HISTORY
             </p>
@@ -232,7 +233,7 @@ export default function RocketDetailPage() {
             <RocketLaunchHistory launches={launchesQuery.data || []} />
           )}
         </section>
-      </main>
+      </div>
     </div>
   );
 }

@@ -54,6 +54,12 @@ npm run preview
 
 ## Architecture
 
+The app is a client-rendered React application built with Vite and TypeScript. React provides reusable components for rocket cards, collections, and dialogs; Vite keeps local development and production builds straightforward. React Router gives each page its own URL without requiring a server-rendering framework.
+
+TanStack React Query manages API caching, loading/error states, and pagination. Zustand handles favourites and collections with `localStorage` persistence, while temporary UI state such as search text and open dialogs stays inside components. Tailwind CSS supports consistent responsive styling, and Lucide supplies reusable icons.
+
+Pages compose feature components, hooks manage remote data, and services handle API requests. This separates presentation from data access and keeps shared behaviour reusable.
+
 ```text
 src/
 ├── components/
@@ -92,6 +98,8 @@ Rocket detail pages request `/launcher_configurations/:id/`. Related launch hist
 The development API can have incomplete or delayed information. The UI treats optional fields as nullable and uses fallbacks rather than inventing values.
 
 ## Tradeoffs and future improvements
+
+For the two-hour scope, the implementation prioritizes the core search, favourite, and collection flows. Browser storage avoids the need for a backend or authentication, but saved data is limited to the current browser and does not sync across devices. A client-rendered app keeps deployment simple, while accepting that rocket content loads after JavaScript runs. Automated tests and more advanced features remain follow-up work.
 
 - Launch history is limited to 20 completed launches; it could use its own Load More control.
 - Video links appear only when the API supplies a `mission.vid_urls` entry.

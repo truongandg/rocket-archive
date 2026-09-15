@@ -1,3 +1,5 @@
+import RocketLoader from "../ui/RocketLoader";
+import RocketLaunchIcon from "../ui/RocketLaunchIcon";
 import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
@@ -80,16 +82,7 @@ export default function RocketExplorer() {
           {rockets.length} ROCKETS
         </span>
       </div>
-      {loading && (
-        <div className="grid grid-cols-1 gap-5 pt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }, (_, index) => (
-            <div
-              key={index}
-              className="h-80 animate-pulse border border-white/10 bg-white/5"
-            />
-          ))}
-        </div>
-      )}
+      {loading && <RocketLoader className="min-h-56" />}
       {error && (
         <div className="py-28 text-center">
           <p className="text-xl font-semibold tracking-[-.03em]">
@@ -117,7 +110,15 @@ export default function RocketExplorer() {
           </div>
           {hasNextPage && (
             <div className="pt-10 text-center">
-              <Button onClick={() => void fetchNextPage()} disabled={isFetchingNextPage} className="px-6 py-3 text-[10px] font-bold tracking-[.16em]">
+              <Button
+                onClick={() => void fetchNextPage()}
+                disabled={isFetchingNextPage}
+                aria-busy={isFetchingNextPage}
+                className="relative h-12 min-w-60 px-12 text-[10px] font-bold tracking-[.16em] disabled:hover:bg-black disabled:hover:text-white"
+              >
+                {isFetchingNextPage && (
+                  <RocketLaunchIcon className="absolute left-3 h-9 w-8 overflow-hidden" />
+                )}
                 {isFetchingNextPage ? "LOADING ROCKETS..." : "LOAD MORE"}
               </Button>
             </div>

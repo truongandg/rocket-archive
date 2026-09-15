@@ -32,3 +32,41 @@ select,
 textarea {
   font: inherit;
 }
+
+.rocket-loader-ship {
+  animation: rocket-loader-rise 1.8s ease-in-out infinite;
+}
+
+.rocket-loader-exhaust {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: rocket-loader-burn .6s ease-in-out infinite alternate;
+}
+
+.rocket-loader-stars {
+  animation: rocket-loader-drift 1.8s linear infinite;
+}
+
+@keyframes rocket-loader-rise {
+  0%, 100% { transform: translateY(4px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes rocket-loader-burn {
+  from { transform: scale(.85, .7); opacity: .65; }
+  to { transform: scale(1, 1); opacity: 1; }
+}
+
+@keyframes rocket-loader-drift {
+  from { transform: translateY(-20px); opacity: 0; }
+  25%, 75% { opacity: 1; }
+  to { transform: translateY(20px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rocket-loader-ship,
+  .rocket-loader-exhaust,
+  .rocket-loader-stars {
+    animation: none;
+  }
+}
