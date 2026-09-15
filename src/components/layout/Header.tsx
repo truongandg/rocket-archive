@@ -11,17 +11,20 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-3 px-4 sm:h-24 sm:px-8 lg:px-12">
         <NavLink
           to="/"
-          className="shrink-0 whitespace-nowrap text-sm font-extrabold tracking-[-0.04em] text-white sm:text-xl"
+          className="shrink-0 whitespace-nowrap font-display text-base font-bold tracking-[-0.02em] text-white sm:text-2xl"
         >
           ROCKET ARCHIVE
         </NavLink>
-        <nav aria-label="Main navigation" className="flex items-center gap-4 sm:gap-10">
+        <nav
+          aria-label="Main navigation"
+          className="flex items-center gap-4 font-display sm:gap-10"
+        >
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `inline-flex min-h-11 items-center text-[10px] font-semibold tracking-[0.08em] transition-colors sm:text-[11px] sm:tracking-[0.18em] ${isActive ? "text-white" : "text-white/60 hover:text-white"}`
+                `inline-flex min-h-11 items-center text-[14px] font-semibold tracking-[0.08em] transition-colors sm:text-[14px] sm:tracking-[0.18em] ${isActive ? "text-white" : "text-white/60 hover:text-white"}`
               }
             >
               {item.label}

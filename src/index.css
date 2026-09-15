@@ -1,5 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Rajdhani", "Inter", sans-serif;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
 
 :root {
   font-family: "Inter", sans-serif;
