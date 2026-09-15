@@ -27,7 +27,7 @@ export default function RocketExplorer() {
   );
 
   const {
-    data,
+    rockets,
     isLoading: loading,
     isError: error,
     refetch,
@@ -35,10 +35,6 @@ export default function RocketExplorer() {
     hasNextPage,
     isFetchingNextPage,
   } = useRockets(queryOptions);
-  const rockets = useMemo(
-    () => data?.pages.flatMap((page) => page.rockets) || [],
-    [data],
-  );
 
   return (
     <section className="mx-auto max-w-[1600px] px-8 py-12 lg:px-12 lg:py-12">
