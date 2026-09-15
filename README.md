@@ -1,75 +1,100 @@
-# React + TypeScript + Vite
+# Rocket Archive
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Rocket Archive is a premium, aerospace-inspired explorer for launch vehicle configurations. Browse rockets, compare their flight records, inspect a configuration's detailed history, and save personal favourites and collections.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Browse Launch Library 2 launcher configurations
+- Server-side search, filtering, and ordering
+- Progressive `Load more` pagination (10 rockets per request)
+- Rocket detail pages with technical specifications, flight records, landing records, and related launch history
+- Favourite rockets and organize them into custom collections
+- Add or remove rockets from collections directly from a card or detail page
+- Persist favourites and collections in `localStorage`
+- Responsive UI with loading, error, and empty states
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS v4
+- React Router
+- TanStack React Query
+- Zustand + `localStorage`
+- Lucide React icons
+- [Launch Library 2 development API](https://lldev.thespacedevs.com/2.3.0/) — used for development because it has no rate limits.
 
-## Expanding the ESLint configuration
+## Running locally
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+cp .env.sample .env
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Open the local address printed by Vite, usually `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The `.env` file sets `VITE_API_BASE_URL` to the development API. Change this value to use another API endpoint, then restart the dev server. For production builds, set the variable before running `npm run build`. Local `.env` files are ignored by Git; `.env.sample` documents the required configuration.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Other commands:
 
+```bash
+npm run build
+npm run lint
+npm run preview
 ```
+
+## Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Rocket explorer with search, filters, sorting, and pagination |
+| `/rockets/:id` | Rocket configuration detail and related launch history |
+| `/collections` | Favourites and custom rocket collections |
+
+## Architecture
+
+```text
+src/
+├── components/
+│   ├── collection/    # Collection dialog, cards, and picker
+│   ├── rocket/        # Explorer, cards, and launch history
+│   ├── layout/        # Application shell and navigation
+│   └── ui/            # Shared button, badge, and confirmation dialog
+├── hooks/             # React Query hooks and UI utilities
+├── pages/             # Route-level components
+├── services/          # API fetcher and Launch Library endpoints
+├── store/             # Persisted user-owned state
+└── types/             # Launch Library response and app state types
+```
+
+## Data and state
+
+Remote API data is handled by React Query. Query hooks own cache keys, loading state, retries, and pagination. The service layer owns endpoint construction; the shared fetcher owns HTTP request handling.
+
+The app intentionally uses Launch Library 2's native `snake_case` response fields throughout. This keeps the small take-home codebase close to the API payload and avoids an unnecessary transformation layer.
+
+Zustand manages only user-owned state:
+
+- `favouriteRocketIds`
+- collections and their `rocketIds`
+
+This state persists under the `rocket-archive-storage` localStorage key. Remote API responses are not persisted.
+
+## API usage
+
+The app uses the development API to avoid rate limits during development and testing. We can switch to the production API by setting `VITE_API_BASE_URL` in `.env` to `https://ll.thespacedevs.com/2.3.0/`. The production API currently limits unauthenticated requests to 15 calls per hour; higher limits require an API key. See the [official API documentation](https://lldev.thespacedevs.com/) for rate-limit details.
+
+The explorer uses `/launcher_configurations/` with server-side search, filter, and ordering parameters. It requests 10 records at a time and follows the API's `next` pagination URL on demand.
+
+Rocket detail pages request `/launcher_configurations/:id/`. Related launch history uses `/launches/` filtered by launcher configuration, limited to the 20 most recent completed launches.
+
+The development API can have incomplete or delayed information. The UI treats optional fields as nullable and uses fallbacks rather than inventing values.
+
+## Tradeoffs and future improvements
+
+- Launch history is limited to 20 completed launches; it could use its own Load More control.
+- Video links appear only when the API supplies a `mission.vid_urls` entry.
+- Collection rocket details are fetched individually and cached by React Query; a batch endpoint or cache hydration could optimize large personal libraries.
+- No automated component or end-to-end tests are included due to the take-home scope.
+- Additional filters, image credit treatment, and richer launch-media support are natural next steps.

@@ -43,13 +43,14 @@ export default function RocketExplorer() {
   return (
     <section className="mx-auto max-w-[1600px] px-8 py-12 lg:px-12 lg:py-12">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
-        <label className="flex h-12 min-w-0 flex-1 items-center gap-3 border border-white/25 px-4 text-white/60 focus-within:border-white">
-          <Search size={17} />
+        <label className="flex h-14 min-w-0 shrink-0 items-center gap-3 border border-white/25 px-4 text-white/60 focus-within:border-white md:h-12 md:flex-1">
+          <Search size={20} className="shrink-0" />
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="SEARCH ROCKETS..."
-            className="w-full bg-transparent text-xs font-medium tracking-[.14em] outline-none placeholder:text-white/35"
+            aria-label="Search rockets"
+            className="h-full min-w-0 w-full bg-transparent text-base font-medium tracking-[.08em] outline-none placeholder:text-white/35 md:text-xs md:tracking-[.14em]"
           />
         </label>
         <label className="relative flex h-12 shrink-0 items-center gap-3 border border-white/25 px-4 text-[11px] font-semibold tracking-[.14em] md:w-64">
