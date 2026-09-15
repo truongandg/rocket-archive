@@ -1,0 +1,110 @@
+import { Search, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
+import useDebouncedValue from "../../hooks/useDebouncedValue";
+import useRockets from "../../hooks/useRockets";
+import RocketCard from "./RocketCard";
+
+type Filter = "ALL" | "ACTIVE" | "REUSABLE";
+type Sort = "name" | "launches";
+
+const filters: Filter[] = ["ALL", "ACTIVE", "REUSABLE"];
+
+export default function RocketExplorer() {
+  const [filter, setFilter] = useState<Filter>("ALL");
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<Sort>("name");
+  const debouncedSearch = useDebouncedValue(search.trim());
+
+  const {
+    data: rockets = [],
+    isLoading: loading,
+    isError: error,
+    refetch,
+  } = useRockets({
+    search: debouncedSearch || undefined,
+    active: filter === "ACTIVE" ? true : undefined,
+    reusable: filter === "REUSABLE" ? true : undefined,
+    ordering: sort === "name" ? "name" : "-total_launch_count",
+  });
+
+  return (
+    <section className="mx-auto max-w-[1600px] px-8 py-12 lg:px-12 lg:py-12">
+      <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
+        <label className="flex h-12 max-w-xl flex-1 items-center gap-3 border border-white/25 px-4 text-white/60 focus-within:border-white">
+          <Search size={17} />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="SEARCH ROCKETS..."
+            className="w-full bg-transparent text-xs font-medium tracking-[.14em] outline-none placeholder:text-white/35"
+          />
+        </label>
+        <label className="flex h-12 items-center gap-3 border border-white/25 px-4 text-[11px] font-semibold tracking-[.14em]">
+          <SlidersHorizontal size={15} />
+          <span className="text-white/45">ORDER</span>
+          <select
+            value={sort}
+            onChange={(event) => setSort(event.target.value as Sort)}
+            className="bg-black outline-none"
+          >
+            <option value="name">NAME</option>
+            <option value="launches">MOST LAUNCHES</option>
+          </select>
+        </label>
+      </div>
+      <div className="mt-8 flex gap-6 overflow-x-auto border-b border-white/15">
+        <div className="flex min-w-max gap-6">
+          {filters.map((item) => (
+            <button
+              type="button"
+              key={item}
+              onClick={() => setFilter(item)}
+              className={`border-b-2 pb-4 text-[10px] font-bold tracking-[.16em] ${filter === item ? "border-white text-white" : "border-transparent text-white/40 hover:text-white"}`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+        <span className="ml-auto whitespace-nowrap text-[10px] font-semibold tracking-[.14em] text-white/45">
+          {rockets.length} ROCKETS
+        </span>
+      </div>
+      {loading && (
+        <div className="grid grid-cols-1 gap-5 pt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }, (_, index) => (
+            <div
+              key={index}
+              className="h-80 animate-pulse border border-white/10 bg-white/5"
+            />
+          ))}
+        </div>
+      )}
+      {error && (
+        <div className="py-28 text-center">
+          <p className="text-xl font-semibold tracking-[-.03em]">
+            UNABLE TO LOAD ROCKETS
+          </p>
+          <button
+            type="button"
+            onClick={() => void refetch()}
+            className="mt-6 border border-white px-5 py-3 text-[10px] font-bold tracking-[.16em] hover:bg-white hover:text-black"
+          >
+            TRY AGAIN
+          </button>
+        </div>
+      )}
+      {!loading && !error && rockets.length === 0 && (
+        <div className="py-28 text-center text-sm font-semibold tracking-[.2em] text-white/45">
+          NO ROCKETS FOUND
+        </div>
+      )}
+      {!loading && !error && rockets.length > 0 && (
+        <div className="grid grid-cols-1 gap-5 pt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {rockets.map((rocket) => (
+            <RocketCard key={rocket.id} rocket={rocket} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
