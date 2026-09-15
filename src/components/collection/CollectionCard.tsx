@@ -86,7 +86,7 @@ export default function CollectionCard({
             className="h-11 min-w-0 flex-1 border border-white/25 bg-black px-4 text-xs text-white outline-none"
           >
             <option value="" disabled>
-              ADD A FAVOURITE ROCKET
+              ADD A SAVED ROCKET
             </option>
             {availableRockets.map((rocket) => (
               <option key={rocket.id} value={rocket.id}>

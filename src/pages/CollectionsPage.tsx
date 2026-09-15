@@ -1,10 +1,10 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CollectionCard from "../components/collection/CollectionCard";
 import CreateCollectionDialog from "../components/collection/CreateCollectionDialog";
 import RocketCard from "../components/rocket/RocketCard";
 import Button from "../components/ui/Button";
-import useFavouriteRockets from "../hooks/useFavouriteRockets";
+import useRocketsById from "../hooks/useRocketsById";
 import { useLibraryStore } from "../store/favorites";
 
 export default function CollectionsPage() {
@@ -14,8 +14,20 @@ export default function CollectionsPage() {
   );
   const collections = useLibraryStore((state) => state.collections);
   const createCollection = useLibraryStore((state) => state.createCollection);
-  const { rockets, isLoading, isError } =
-    useFavouriteRockets(favouriteRocketIds);
+  const savedRocketIds = useMemo(
+    () =>
+      Array.from(
+        new Set([
+          ...favouriteRocketIds,
+          ...collections.flatMap((collection) => collection.rocketIds),
+        ]),
+      ),
+    [collections, favouriteRocketIds],
+  );
+  const { rockets, isLoading, isError } = useRocketsById(savedRocketIds);
+  const favouriteRockets = rockets.filter((rocket) =>
+    favouriteRocketIds.includes(rocket.id),
+  );
 
   return (
     <div className="mx-auto max-w-[1600px] px-8 py-16 lg:px-12 lg:py-24">
@@ -63,15 +75,15 @@ export default function CollectionsPage() {
             UNABLE TO LOAD FAVOURITE ROCKETS
           </p>
         )}
-        {!isLoading && !isError && rockets.length === 0 && (
+        {!isLoading && !isError && favouriteRockets.length === 0 && (
           <p className="border-t border-white/15 py-10 text-xs font-semibold tracking-[.14em] text-white/40">
             NO FAVOURITE ROCKETS YET. SAVE ONE FROM THE EXPLORER TO START YOUR
             ARCHIVE.
           </p>
         )}
-        {!isLoading && !isError && rockets.length > 0 && (
+        {!isLoading && !isError && favouriteRockets.length > 0 && (
           <div className="grid grid-cols-1 gap-5 pt-7 sm:grid-cols-2 lg:grid-cols-3">
-            {rockets.map((rocket) => (
+            {favouriteRockets.map((rocket) => (
               <RocketCard key={rocket.id} rocket={rocket} />
             ))}
           </div>
