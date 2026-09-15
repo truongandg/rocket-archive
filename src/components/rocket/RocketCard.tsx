@@ -5,6 +5,7 @@ import type { Rocket } from "../../types/rocket";
 import CollectionPicker from "../collection/CollectionPicker";
 import Button from "../ui/Button";
 import StatusBadge from "../ui/StatusBadge";
+import RocketImage from "./RocketImage";
 
 interface RocketCardProps {
   rocket: Rocket;
@@ -38,17 +39,10 @@ export default function RocketCard({ rocket }: RocketCardProps) {
         aria-label={`View ${rocket.full_name || rocket.name}`}
       >
         <div className="relative h-44 overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_50%_0%,#3f3f3f,transparent_65%)]">
-          {rocket.image?.image_url ? (
-            <img
-              src={rocket.image.image_url}
-              alt=""
+            <RocketImage
+              src={rocket.image?.image_url}
               className="h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
             />
-          ) : (
-            <div className="absolute inset-x-0 bottom-6 px-6 text-[10px] font-semibold tracking-[.24em] text-white/40">
-              LAUNCHER CONFIGURATION
-            </div>
-          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#090909] to-transparent" />
           <div className="absolute bottom-4 left-5 flex gap-2">
             <StatusBadge tone={rocket.active ? "success" : "neutral"}>

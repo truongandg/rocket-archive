@@ -3,6 +3,7 @@ import { ArrowLeft, Heart } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import CollectionPicker from "../components/collection/CollectionPicker";
 import RocketLaunchHistory from "../components/rocket/RocketLaunchHistory";
+import RocketImage from "../components/rocket/RocketImage";
 import Button from "../components/ui/Button";
 import useRocket from "../hooks/useRocket";
 import useRocketLaunches from "../hooks/useRocketLaunches";
@@ -70,13 +71,10 @@ export default function RocketDetailPage() {
     <div>
       <section className="relative min-h-[420px] overflow-hidden border-b border-white/15 md:min-h-[500px]">
         <div className="absolute inset-0 bg-[#111]">
-          {rocket.image?.image_url && (
-            <img
-              src={rocket.image.image_url}
-              alt=""
+            <RocketImage
+              src={rocket.image?.image_url}
               className="h-full w-full object-cover opacity-70"
             />
-          )}
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/15" />
         </div>
         <div className="relative mx-auto max-w-[1600px] px-8 py-16 lg:px-12 lg:py-24">
