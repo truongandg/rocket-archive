@@ -64,7 +64,7 @@ export default function CreateCollectionDialog({
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="E.G. REUSABLE ROCKETS"
-            className="mt-3 h-12 w-full border border-white/25 bg-transparent px-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-white"
+            className="mt-3 h-12 w-full border border-white/25 bg-transparent px-4 text-base! text-white outline-none placeholder:text-white/30 focus:border-white"
           />
         </label>
         <div className="mt-6 flex justify-end gap-3">
