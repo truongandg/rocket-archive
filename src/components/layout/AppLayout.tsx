@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { useLayoutEffect, type ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "./Header";
@@ -16,6 +17,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <div className="min-h-screen bg-black text-white">
       <Header />
       <main>{children}</main>
+      <Analytics />
     </div>
   );
 }
